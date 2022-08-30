@@ -47,6 +47,10 @@ router.get('/:id', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
     var { activity_group_id, title } = toJSON(req.body);
     try {
+        var code = (!activity_group_id || !title) ? 400 : 201;
+        var status = code == 201 ? 'Success' : 'Failed';
+        var message = code == 201 ? 'Success' : 'activity_group_id or title is required';
+
         var data = {
             activity_group_id: activity_group_id,
             title: title,
@@ -56,12 +60,13 @@ router.post('/', async function(req, res, next) {
             updated_at: new Date(),
         }
 
-        var todo = await Todo.create(data);
-        res.status(201).json({
-            status: 'Success',
-            message: 'Success',
+        var todo = code == 201 ? await Todo.create(data) : {};
+        res.status(code).json({
+            status,
+            message,
             data: todo
         });
+        next();
     } catch (e) {
         res.status(400).json(e)
     }

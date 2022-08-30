@@ -41,6 +41,10 @@ router.get('/:id', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
     var { email, title } = toJSON(req.body);
     try {
+        var code = (!email || !title) ? 400 : 201;
+        var status = code == 201 ? 'Success' : 'Failed';
+        var message = code == 201 ? 'Success' : 'email or title is required';
+
         var data = {
             email: email,
             title: title,
@@ -48,12 +52,14 @@ router.post('/', async function(req, res, next) {
             updated_at: new Date(),
         }
 
-        var activity = await Activity.create(data);
-        res.status(201).json({
-            status: 'Success',
-            message: 'Success',
+        var activity = code == 201 ? await Activity.create(data) : {};
+
+        res.status(code).json({
+            status,
+            message,
             data: activity
         });
+        next();
     } catch (e) {
         res.status(400).json(e)
     }
