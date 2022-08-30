@@ -9,7 +9,7 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
 
-     await queryInterface.createTable('activity', {
+     await queryInterface.createTable('activities', {
          id: {
              allowNull: false,
              autoIncrement: true,
@@ -45,6 +45,6 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
 
-     await queryInterface.dropTable('activity');
+     await queryInterface.dropTable('activities');
   }
 };
